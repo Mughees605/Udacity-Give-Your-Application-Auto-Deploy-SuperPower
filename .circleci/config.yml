@@ -3,9 +3,6 @@ version: 2.1
 commands:
   print_pipeline_id:
     description: "A very simple command for demonstration purposes."
-    parameters:
-      to:
-        type: string
     steps:
       - run:
           name: "echo workflow id"
