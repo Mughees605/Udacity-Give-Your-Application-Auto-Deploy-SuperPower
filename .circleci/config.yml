@@ -42,6 +42,24 @@ jobs:
           name: "output output.txt file."
           command: |
              cat output.txt
+################################THIS IS THE SAME WORK AS ABOVE BUT USED WORKSPACE AS STORAGE.
+#  save_hello_world_output:
+#     docker:
+#       - image: circleci/node:13.8.0
+#     steps:
+#       - run: echo "hello world" > ~/output.txt
+#       - persist_to_workspace:
+#           root: ~/
+#           paths:
+#             - output.txt
+
+#   print_output_file:
+#     docker:
+#       - image: circleci/node:13.8.0
+#     steps:
+#       - attach_workspace:
+#           at: ~/
+#       - run: cat ~/output.txt
 
 workflows:
   # Name the workflow "welcome"
