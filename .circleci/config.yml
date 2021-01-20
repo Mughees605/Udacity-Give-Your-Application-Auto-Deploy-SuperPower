@@ -8,7 +8,7 @@ jobs:
     steps:
       - run:
           name: "show template" 
-          command: cat ~/template.yml
+          command: ls
 
 workflows:
   # Name the workflow "welcome"
