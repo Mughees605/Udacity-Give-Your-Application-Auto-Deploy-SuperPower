@@ -6,8 +6,9 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
-      - name: "show template.yml"
-      - run: cat ~/template.yml
+      - run:
+          name: "show template" 
+          command: cat ~/template.yml
 
 workflows:
   # Name the workflow "welcome"
