@@ -7,9 +7,13 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - save_cache:
-          key: "template file"
+          key: "template_file"
           paths:
             - ./template.yml
+
+      - restore_cache:
+          keys:
+            - "template_file"
       - run: cat ~/project/template.yml
 
 workflows:
