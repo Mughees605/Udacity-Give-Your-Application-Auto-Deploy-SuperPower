@@ -10,7 +10,7 @@ jobs:
           key: "template file"
           paths:
             - ./template.yml
-      - run: cat template.yml
+      - run: cat ~/project/template.yml
 
 workflows:
   # Name the workflow "welcome"
