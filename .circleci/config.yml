@@ -12,7 +12,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update ansible
+            apt add --update ansible
       - run: 
           name: Configure server
           command: |
