@@ -10,9 +10,17 @@ jobs:
           fingerprints:
             - "b6:57:31:de:91:8b:6e:92:c9:b0:9a:58:28:0c:62:e0"
       - run:
+          name: Update
+          command: |
+            sudo apt update
+      - run:
           name: Install dependencies
           command: |
-            apt add --update ansible
+            sudo apt install ansible -y
+      - run:
+          name: Ansible version
+          command: |
+            sudo ansible --version
       - run: 
           name: Configure server
           command: |
