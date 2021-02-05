@@ -24,6 +24,10 @@ jobs:
           command: |
             sudo ansible --version
       - run: 
+          name: Configure Python
+          command: |
+            ansible-playbook --version -e 'ansible_python_interpreter=/usr/bin/python3'
+      - run: 
           name: Configure server
           command: |
             ansible-playbook -i inventory main-remote.yml
