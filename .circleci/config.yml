@@ -26,7 +26,11 @@ jobs:
       - run: 
           name: Configure Python
           command: |
-            ansible-playbook --version -e 'ansible_python_interpreter=/usr/bin/python3'
+            ansible_python_interpreter=/usr/bin/python3
+      - run: 
+          name: Configure Python
+          command: |
+            ansible -m ping all
       - run: 
           name: Configure server
           command: |
