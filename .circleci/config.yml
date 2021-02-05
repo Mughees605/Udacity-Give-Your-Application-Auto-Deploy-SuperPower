@@ -9,6 +9,9 @@ jobs:
           fingerprints:
             - "fe:4c:20:b5:69:f9:2f:b6:a2:09:f1:f7:14:6b:0f:1c"
       - run:
+          name: Keyscan 54.160.91.227
+          command: sudo ssh-keyscan -H 54.160.91.227 >> ~/.ssh/known_hosts
+      - run:
           name: Update
           command: |
             sudo apt update
