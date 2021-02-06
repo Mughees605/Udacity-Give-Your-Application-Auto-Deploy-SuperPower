@@ -17,6 +17,9 @@ jobs:
           name: Ansible version
           command: |
             sudo ansible --version
+      - run:
+          name: Keyscan54.160.91.227 (HACK)
+          command: sudo ssh-keyscan -H 54.160.91.227 >> ~/.ssh/known_hosts
       - run: 
           name: Configure server
           command: |
