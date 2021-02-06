@@ -5,12 +5,6 @@ jobs:
       - image: circleci/python:3.8.3-buster
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "fe:4c:20:b5:69:f9:2f:b6:a2:09:f1:f7:14:6b:0f:1c"
-      - run:
-          name: Keyscan 54.160.91.227
-          command: sudo ssh-keyscan -H 54.160.91.227 >> ~/.ssh/known_hosts
       - run:
           name: Update
           command: |
@@ -24,17 +18,9 @@ jobs:
           command: |
             sudo ansible --version
       - run: 
-          name: Configure Python
-          command: |
-            54.160.91.227 ansible_python_interpreter=/usr/bin/python3
-      - run: 
-          name: Configure Python
-          command: |
-            ansible -m ping all
-      - run: 
           name: Configure server
           command: |
-            ansible-playbook -i inventory main-remote.yml
+            ansible-playbook -i inventory main-remote.yml --private-key udacity.pem
 workflows:
   my_workflow:
     jobs:
