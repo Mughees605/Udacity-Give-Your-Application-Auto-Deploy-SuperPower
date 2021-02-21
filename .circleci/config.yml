@@ -168,13 +168,14 @@ jobs:
               --stack-name "udapeople-frontend-<< pipeline.parameters.workflow-id >>" \
               --parameter-overrides ID="<< pipeline.parameters.workflow-id >>"  
       - run:
+          working_directory: ./.circleci/files
           name: Add back-end ip to ansible inventory
           command: |
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:project,Values=backend-<< pipeline.parameters.workflow-id >>" \
               --output text >> .circleci/ansible/inventory.txt
-            cat .circleci/ansible/inventory.txt
+            cat inventory.txt
       - persist_to_workspace:
           root: ~/
           paths:
