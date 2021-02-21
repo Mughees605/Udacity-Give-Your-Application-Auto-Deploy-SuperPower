@@ -146,7 +146,7 @@ jobs:
 
   deploy-infrastructure:
     docker:
-       - image: cimg/base:2020.01
+       - image: circleci/aws-cli@1.3.0
     steps:
       # Checkout code from git
       - run:
@@ -326,9 +326,9 @@ workflows:
           requires: [build-frontend]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-          filters:
-            branches:
-              only: [test-feature-branch]
+          # filters:
+          #   branches:
+          #     only: [test-feature-branch]
       # - configure-infrastructure:
       #     requires: [deploy-infrastructure]
       # - run-migrations:
