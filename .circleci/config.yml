@@ -213,7 +213,7 @@ jobs:
             pwd &&
             ls -la
             cat inventory.txt
-            ansible-playbook -i inventory.txt configure-server.yaml
+            ansible-playbook -i inventory.txt configure-server.yml
 
 #   run-migrations:
 #     docker:
