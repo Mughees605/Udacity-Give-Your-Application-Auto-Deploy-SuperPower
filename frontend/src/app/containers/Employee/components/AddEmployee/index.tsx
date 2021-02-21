@@ -264,7 +264,7 @@ class AddEmployee extends Component<AddEmployee.Props> {
               <a onClick={this.handleFormReset}>View & Manage</a>
             </li>
             <li>
-              <a style={this.thirdLevelBreadcrumb}>Add New</a>
+              <a style={this.thirdLevelBreadcrumb}>Add New Employee</a>
             </li>
           </Breadcrumb>
 
