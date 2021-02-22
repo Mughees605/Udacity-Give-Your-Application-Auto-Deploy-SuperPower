@@ -345,7 +345,7 @@ jobs:
             curl -s ${URL} | grep -q "Welcome"
       # Here's where you will add some code to rollback on failure  
 
- cloudfront-update:
+  cloudfront-update:
     executor: aws
     steps:
       - checkout
