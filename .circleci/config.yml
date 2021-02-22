@@ -178,7 +178,7 @@ jobs:
           command: |
             BACKEND_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --filters "Name=tag:project,Values=udapeople-backend-<<pipeline.parameters.workflow-id>>" \
               --output text)
             curl -H "Content-Type: text/plain" -H "token: 5c257e2d-1ef6-485d-a065-03725281aa58" --request PUT --data "http://$BACKEND_IP:3030" https://api.memstash.io/values/BACKEND_URL  
       - run:
@@ -257,10 +257,10 @@ jobs:
             if grep -q "has been executed successfully" migration_status
             then
               echo "DB migration was successful, will update memstash..."
-              curl -H "Content-Type: text/plain" -H "token: 0a556d19-9cc7-408a-9878-ad00ac666621" --request PUT --data "success" https://api.memstash.io/values/DB_MIGRATION_${CIRCLE_WORKFLOW_ID:0:7}
+              curl -H "Content-Type: text/plain" -H "token: 0a556d19-9cc7-408a-9878-ad00ac666621" --request PUT --data "success" https://api.memstash.io/values/DB_MIGRATION_<<pipeline.parameters.workflow-id>>
             else
               echo "DB migration failed, please verify setup! Probably the database already exists. Verify setup!"
-              curl -H "Content-Type: text/plain" -H "token: 0a556d19-9cc7-408a-9878-ad00ac666621" --request PUT --data "failure" https://api.memstash.io/values/DB_MIGRATION_${CIRCLE_WORKFLOW_ID:0:7}
+              curl -H "Content-Type: text/plain" -H "token: 0a556d19-9cc7-408a-9878-ad00ac666621" --request PUT --data "failure" https://api.memstash.io/values/DB_MIGRATION_<<pipeline.parameters.workflow-id>>
             fi
             echo "WorkflowID=<<pipeline.parameters.workflow-id>>"
      # Here's where you will add some code to rollback on failure      
