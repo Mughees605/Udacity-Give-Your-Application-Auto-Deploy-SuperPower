@@ -1,7 +1,6 @@
 
 1. [URL01]:
-https://github.com/bendaniel10/udacity-project-auto-deploy-solution
-https://app.circleci.com/pipelines/github/bendaniel10/udacity-project-auto-deploy-solution
+https://github.com/Mughees605/Give-Your-Application-Auto-Deploy-SuperPower
 
 2. [URL02]:
 https://udapeople-231215654.s3.amazonaws.com/index.html
