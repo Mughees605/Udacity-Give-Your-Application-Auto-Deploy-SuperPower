@@ -323,7 +323,7 @@ jobs:
           keys: [backend-dist]
       - run:
           name: Keyscan54.160.91.227 (HACK)
-          command: sudo ssh-keyscan -H inventory.txt >> ~/.ssh/known_hosts
+          command: ssh-keyscan -H inventory.txt >> ~/.ssh/known_hosts
       - run:
           name: Install dependencies
           working_directory: /tmp
