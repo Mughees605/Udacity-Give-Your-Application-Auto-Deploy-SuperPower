@@ -266,11 +266,19 @@ jobs:
      # Here's where you will add some code to rollback on failure      
 
   deploy-frontend:
-    executor: aws
+    executor: node
     steps:
       - checkout
       - restore_cache:
           keys: [frontend-build]
+      - run:
+          name: Install AWS CLI dependencies
+          working_directory: /tmp
+          command: |
+            sudo apt-get update && sudo apt-get install -yy less
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
       - run:
           name: Rebuild frontend with backend API Url
           working_directory: ./frontend
@@ -288,32 +296,32 @@ jobs:
           key: frontend-dist
       # Here's where you will add some code to rollback on failure      
                     
-  # deploy-backend:
-  #   executor: python
-  #   steps:
-  #     - checkout
-  #     - attach_workspace:
-  #         at: .
-  #     - restore_cache:
-  #         keys: [backend-dist]
-  #     - add_ssh_keys:
-  #         fingerprints: ["6d:40:db:8b:3a:1e:96:3c:e6:10:12:ef:1e:f6:1c:70"]
-  #     - attach_workspace:
-  #         at: .
-  #     - run:
-  #         name: Install dependencies
-  #         working_directory: /tmp
-  #         command: |
-  #           apk add --update ansible curl rsync openssh nodejs npm
-  #           ansible --version
-  #           pip install awscli
-  #           aws --version
-  #     - run:
-  #         name: Deploy backend
-  #         working_directory: ./.circleci/ansible
-  #         command: |
-  #           cat inventory
-  #           ansible-playbook -i inventory.txt deploy-server.yaml -vv
+  deploy-backend:
+    executor: python
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - restore_cache:
+          keys: [backend-dist]
+      - add_ssh_keys:
+          fingerprints: ["6d:40:db:8b:3a:1e:96:3c:e6:10:12:ef:1e:f6:1c:70"]
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install dependencies
+          working_directory: /tmp
+          command: |
+            apk add --update ansible curl rsync openssh nodejs npm
+            ansible --version
+            pip install awscli
+            aws --version
+      - run:
+          name: Deploy backend
+          working_directory: ./.circleci/ansible
+          command: |
+            cat inventory
+            ansible-playbook -i inventory.txt deploy-server.yml -vv
 #   smoke-test:
 #     docker:
 #       # Lightweight Docker image 
