@@ -1,0 +1,16 @@
+
+1. [URL01]:
+https://github.com/bendaniel10/udacity-project-auto-deploy-solution
+https://app.circleci.com/pipelines/github/bendaniel10/udacity-project-auto-deploy-solution
+
+2. [URL02]:
+https://udapeople-231215654.s3.amazonaws.com/index.html
+
+3. [URL03]:
+d37acu424flyl2.cloudfront.net
+
+4. [URL04]:
+https://ec2-18-212-50-130.compute-1.amazonaws.com/:3030
+
+5. [URL05]:
+https://ec2-18-212-50-130.compute-1.amazonaws.com:9090/targets

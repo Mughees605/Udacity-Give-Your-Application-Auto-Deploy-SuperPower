@@ -221,7 +221,10 @@ jobs:
           root: .
           paths:
             - .circleci/ansible/inventory.txt
-      # Here's where you will add some code to rollback on failure      
+      # Here's where you will add some code to rollback on failure
+      - destroy_environment:
+          id: <<pipeline.parameters.workflow-id>>
+          when: on_fail      
 
   configure-infrastructure:
     executor: python
@@ -246,6 +249,9 @@ jobs:
             ls -la
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
+      - destroy_environment:
+          id: <<pipeline.parameters.workflow-id>>
+          when: on_fail
 
   run-migrations:
     executor: node
@@ -280,7 +286,10 @@ jobs:
               curl -H "Content-Type: text/plain" -H "token: 0a556d19-9cc7-408a-9878-ad00ac666621" --request PUT --data "failure" https://api.memstash.io/values/DB_MIGRATION_<<pipeline.parameters.workflow-id>>
             fi
             echo "WorkflowID=<<pipeline.parameters.workflow-id>>"
-     # Here's where you will add some code to rollback on failure      
+     # Here's where you will add some code to rollback on failure
+      - destroy_environment:
+          id: <<pipeline.parameters.workflow-id>>
+          when: on_fail      
 
   deploy-frontend:
     executor: node
@@ -311,19 +320,24 @@ jobs:
       - save_cache:
           paths: [frontend/dist]
           key: frontend-dist
-      # Here's where you will add some code to rollback on failure      
+      # Here's where you will add some code to rollback on failure
+      - destroy_environment:
+          id: <<pipeline.parameters.workflow-id>>
+          when: on_fail
+      - revert_migrations:
+          id: <<pipeline.parameters.workflow-id>>
+          when: on_fail 
                     
   deploy-backend:
     executor: python
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints: ["6d:40:db:8b:3a:1e:96:3c:e6:10:12:ef:1e:f6:1c:70"]
       - attach_workspace:
           at: .
       - restore_cache:
           keys: [backend-dist]
-      - run:
-          name: Keyscan54.160.91.227 (HACK)
-          command: ssh-keyscan -H inventory.txt >> ~/.ssh/known_hosts
       - run:
           name: Install dependencies
           working_directory: /tmp
@@ -338,6 +352,13 @@ jobs:
           command: |
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-server.yml -vv
+      - destroy_environment:
+          id: <<pipeline.parameters.workflow-id>>
+          when: on_fail
+      - revert_migrations:
+          id: <<pipeline.parameters.workflow-id>>
+          when: on_fail
+
   smoke-test:
     executor: python
     steps:
@@ -361,7 +382,13 @@ jobs:
           command: |
             URL="http://udapeople-<<pipeline.parameters.workflow-id>>.s3-website.eu-central-1.amazonaws.com/index.html"
             curl -s ${URL} | grep -q "Welcome"
-      # Here's where you will add some code to rollback on failure  
+      # Here's where you will add some code to rollback on failure
+      - destroy_environment:
+          id: <<pipeline.parameters.workflow-id>>
+          when: on_fail
+      - revert_migrations:
+          id: <<pipeline.parameters.workflow-id>>
+          when: on_fail  
 
   cloudfront-update:
     executor: aws
@@ -430,9 +457,9 @@ workflows:
           requires: [build-frontend]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend]
-          # filters:
-          #   branches:
-          #     only: [test-feature-branch]
+          filters:
+            branches:
+              only: [test-feature-branch]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
