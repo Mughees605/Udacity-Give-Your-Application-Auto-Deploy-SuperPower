@@ -56,7 +56,7 @@ commands:
           name: Revert migrations
           working_directory: ./backend
           command: |
-            SUCCESS=$(curl -H "token: 0a556d19-9cc7-408a-9878-ad00ac666621" --request GET https://api.memstash.io/values/DB_MIGRATION_<< parameters.id >>)
+            SUCCESS=$(curl -H "token: e26e158b-11be-4b05-8627-4c629a4a8135" --request GET https://api.memstash.io/values/DB_MIGRATION_<< parameters.id >>)
             echo $SUCCESS
             if [[ "$SUCCESS" == "success" ]]
             then
@@ -280,10 +280,10 @@ jobs:
             if grep -q "has been executed successfully" migration_status
             then
               echo "DB migration was successful, will update memstash..."
-              curl -H "Content-Type: text/plain" -H "token: 0a556d19-9cc7-408a-9878-ad00ac666621" --request PUT --data "success" https://api.memstash.io/values/DB_MIGRATION_<<pipeline.parameters.workflow-id>>
+              curl -H "Content-Type: text/plain" -H "token: e26e158b-11be-4b05-8627-4c629a4a8135" --request PUT --data "success" https://api.memstash.io/values/DB_MIGRATION_<<pipeline.parameters.workflow-id>>
             else
               echo "DB migration failed, please verify setup! Probably the database already exists. Verify setup!"
-              curl -H "Content-Type: text/plain" -H "token: 0a556d19-9cc7-408a-9878-ad00ac666621" --request PUT --data "failure" https://api.memstash.io/values/DB_MIGRATION_<<pipeline.parameters.workflow-id>>
+              curl -H "Content-Type: text/plain" -H "token: e26e158b-11be-4b05-8627-4c629a4a8135" --request PUT --data "failure" https://api.memstash.io/values/DB_MIGRATION_<<pipeline.parameters.workflow-id>>
             fi
             echo "WorkflowID=<<pipeline.parameters.workflow-id>>"
      # Here's where you will add some code to rollback on failure
@@ -462,10 +462,10 @@ workflows:
           #     only: [test-feature-branch]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
-      # - run-migrations:
-      #     requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [run-migrations]
+      - run-migrations:
+          requires: [configure-infrastructure]
+      - deploy-frontend:
+          requires: [run-migrations]
       # - deploy-backend:
       #     requires: [run-migrations]
       # - smoke-test:
