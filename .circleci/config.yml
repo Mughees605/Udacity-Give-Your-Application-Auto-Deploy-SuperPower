@@ -232,7 +232,7 @@ jobs:
       # Checkout code from git
       - checkout
       - add_ssh_keys:
-          fingerprints: ["6d:40:db:8b:3a:1e:96:3c:e6:10:12:ef:1e:f6:1c:70"]
+          fingerprints: ["fa:c8:50:55:f7:9d:64:ba:86:a1:84:fe:b6:22:97:91"]
       - attach_workspace:
           at: .
       - run:
@@ -333,7 +333,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["6d:40:db:8b:3a:1e:96:3c:e6:10:12:ef:1e:f6:1c:70"]
+          fingerprints: ["fa:c8:50:55:f7:9d:64:ba:86:a1:84:fe:b6:22:97:91"]
       - attach_workspace:
           at: .
       - restore_cache:
@@ -460,8 +460,8 @@ workflows:
           # filters:
           #   branches:
           #     only: [test-feature-branch]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
