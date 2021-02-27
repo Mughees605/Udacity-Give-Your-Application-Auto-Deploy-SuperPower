@@ -14,7 +14,7 @@ executors:
 parameters:
   workflow-id:
     type: string
-    default: "231215654"
+    default: "udapeople"
   memstash-token:
     type: string
     default: "b9461c43-6888-4d04-8e76-7beeddbb863c"
@@ -197,7 +197,7 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:project,Values=udapeople-backend-<<pipeline.parameters.workflow-id>>" \
               --output text)
-            curl -H "Content-Type: text/plain" -H "token: 5c257e2d-1ef6-485d-a065-03725281aa58" --request PUT --data "http://$BACKEND_IP:3030" https://api.memstash.io/values/BACKEND_URL  
+            curl -H "Content-Type: text/plain" -H "token: 454b01e1-63f2-4ae3-963c-e05cf68c7436" --request PUT --data "http://$BACKEND_IP:3030" https://api.memstash.io/values/BACKEND_URL  
       - run:
           working_directory: ./.circleci/files
           name: Ensure front-end infrastructure exist
@@ -309,7 +309,7 @@ jobs:
           name: Rebuild frontend with backend API Url
           working_directory: ./frontend
           command: |
-            export API_URL=$(curl -H "token: 5c257e2d-1ef6-485d-a065-03725281aa58" --request GET https://api.memstash.io/values/BACKEND_URL)
+            export API_URL=$(curl -H "token: 454b01e1-63f2-4ae3-963c-e05cf68c7436" --request GET https://api.memstash.io/values/BACKEND_URL)
             echo "${API_URL}"
             npm run build
       - run:
@@ -375,7 +375,7 @@ jobs:
           name: Backend smoke test.
           working_directory: ./backend
           command: |
-            export BACKEND_URL=$(curl -H "token: 5c257e2d-1ef6-485d-a065-03725281aa58" --request GET https://api.memstash.io/values/BACKEND_URL)
+            export BACKEND_URL=$(curl -H "token: 454b01e1-63f2-4ae3-963c-e05cf68c7436" --request GET https://api.memstash.io/values/BACKEND_URL)
             curl "$BACKEND_URL/api/status"
       - run:
           name: Frontend smoke test.
@@ -457,20 +457,20 @@ workflows:
           requires: [build-frontend]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend]
-          filters:
-            branches:
-              only: [test-feature-branch]
-      - configure-infrastructure:
-          requires: [deploy-infrastructure]
-      - run-migrations:
-          requires: [configure-infrastructure]
-      - deploy-frontend:
-          requires: [run-migrations]
-      - deploy-backend:
-          requires: [run-migrations]
-      - smoke-test:
-          requires: [deploy-backend, deploy-frontend]
-      - cloudfront-update:
-          requires: [smoke-test]
-      - cleanup:
-          requires: [cloudfront-update]
+          # filters:
+          #   branches:
+          #     only: [test-feature-branch]
+      # - configure-infrastructure:
+      #     requires: [deploy-infrastructure]
+      # - run-migrations:
+      #     requires: [configure-infrastructure]
+      # - deploy-frontend:
+      #     requires: [run-migrations]
+      # - deploy-backend:
+      #     requires: [run-migrations]
+      # - smoke-test:
+      #     requires: [deploy-backend, deploy-frontend]
+      # - cloudfront-update:
+      #     requires: [smoke-test]
+      # - cleanup:
+      #     requires: [cloudfront-update]
