@@ -346,21 +346,22 @@ jobs:
             ansible --version
             pip install awscli
             aws --version
+            ls -la
       - run:
           name: Keyscan54.173.63.7 (HACK)
-          command: ssh-keyscan -f inventory.txt >> ~/.ssh/known_hosts
+          command: ssh-keyscan -f file://inventory.txt >> ~/.ssh/known_hosts
       - run:
           name: Deploy backend
           working_directory: ./.circleci/ansible
           command: |
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-server.yml -vv
-      # - destroy_environment:
-      #     id: <<pipeline.parameters.workflow-id>>
-      #     when: on_fail
-      # - revert_migrations:
-      #     id: <<pipeline.parameters.workflow-id>>
-      #     when: on_fail
+      - destroy_environment:
+          id: <<pipeline.parameters.workflow-id>>
+          when: on_fail
+      - revert_migrations:
+          id: <<pipeline.parameters.workflow-id>>
+          when: on_fail
 
   smoke-test:
     executor: python
