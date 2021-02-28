@@ -332,8 +332,8 @@ jobs:
     executor: python
     steps:
       - checkout
-      - add_ssh_keys:
-          fingerprints: ["fa:c8:50:55:f7:9d:64:ba:86:a1:84:fe:b6:22:97:91"]
+      # - add_ssh_keys:
+      #     fingerprints: ["fa:c8:50:55:f7:9d:64:ba:86:a1:84:fe:b6:22:97:91"]
       - attach_workspace:
           at: .
       - restore_cache:
@@ -346,6 +346,9 @@ jobs:
             ansible --version
             pip install awscli
             aws --version
+      - run:
+          name: Keyscan54.173.63.7 (HACK)
+          command: sudo ssh-keyscan -H 54.173.63.7 >> ~/.ssh/known_hosts
       - run:
           name: Deploy backend
           working_directory: ./.circleci/ansible
