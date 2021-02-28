@@ -348,7 +348,7 @@ jobs:
             aws --version
       - run:
           name: Keyscan54.173.63.7 (HACK)
-          command: ssh-keyscan -H 54.173.63.7 >> ~/.ssh/known_hosts
+          command: ssh-keyscan -f inventory.txt >> ~/.ssh/known_hosts
       - run:
           name: Deploy backend
           working_directory: ./.circleci/ansible
