@@ -3,7 +3,7 @@
 https://github.com/Mughees605/Give-Your-Application-Auto-Deploy-SuperPower
 
 2. [URL02]:
-https://udapeople-231215654.s3.amazonaws.com/index.html
+https://udapeople-kk1j287dhjppmz408.s3.amazonaws.com/index.html
 
 3. [URL03]:
 d37acu424flyl2.cloudfront.net
