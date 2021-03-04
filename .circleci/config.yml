@@ -332,12 +332,10 @@ jobs:
     executor: python
     steps:
       - checkout
-      # - add_ssh_keys:
-      #     fingerprints: ["fa:c8:50:55:f7:9d:64:ba:86:a1:84:fe:b6:22:97:91"]
+      - add_ssh_keys:
+          fingerprints: ["fa:c8:50:55:f7:9d:64:ba:86:a1:84:fe:b6:22:97:91"]
       - attach_workspace:
           at: .
-      - restore_cache:
-          keys: [backend-dist]
       - run:
           name: Install dependencies
           working_directory: /tmp
@@ -348,21 +346,17 @@ jobs:
             aws --version
             ls -la
       - run:
-          name: Keyscan54.173.63.7 (HACK)
-          working_directory: ./.circleci/ansible
-          command: ssh-keyscan -f file://inventory.txt >> ~/.ssh/known_hosts
+          name: Back-end build
+          command: |
+             cd backend
+             sudo npm install
+             sudo npm run build
       - run:
           name: Deploy backend
           working_directory: ./.circleci/ansible
           command: |
             cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-server.yml -vv
-      - destroy_environment:
-          id: <<pipeline.parameters.workflow-id>>
-          when: on_fail
-      - revert_migrations:
-          id: <<pipeline.parameters.workflow-id>>
-          when: on_fail
+            ansible-playbook -i inventory.txt deploy-server.yml 
 
   smoke-test:
     executor: python
@@ -450,18 +444,18 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
-      - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
-      - deploy-infrastructure:
-          requires: [test-frontend, test-backend]
+      # - build-frontend
+      # - build-backend
+      # - test-frontend:
+      #     requires: [build-frontend]
+      # - test-backend:
+      #     requires: [build-backend]
+      # - scan-backend:
+      #     requires: [build-backend]
+      # - scan-frontend:
+      #     requires: [build-frontend]
+      # - deploy-infrastructure:
+      #     requires: [test-frontend, test-backend]
           # filters:
           #   branches:
           #     only: [test-feature-branch]
@@ -471,8 +465,7 @@ workflows:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
       #     requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
+      - deploy-backend
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
