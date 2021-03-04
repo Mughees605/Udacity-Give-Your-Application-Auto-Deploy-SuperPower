@@ -15,6 +15,11 @@
       dest: /home/ubuntu/uda_app
       recursive: true
 
+  - name: "LIST"
+    become: true
+    command: ls
+    ignore_errors: true
+
   - name: "delete anything that might already be running"
     become: true
     command: pm2 delete all
