@@ -14,7 +14,7 @@ executors:
 parameters:
   workflow-id:
     type: string
-    default: "123"
+    default: "9767"
   memstash-token:
     type: string
     default: "b9461c43-6888-4d04-8e76-7beeddbb863c"
@@ -381,7 +381,6 @@ jobs:
           command: |
             URL="http://udapeople-<<pipeline.parameters.workflow-id>>.s3-website.us-east-1.amazonaws.com/index.html"
             curl -s ${URL} | grep -q "Welcome"
-            exit 1
       # Here's where you will add some code to rollback on failure
       - destroy_environment:
           id: <<pipeline.parameters.workflow-id>>
