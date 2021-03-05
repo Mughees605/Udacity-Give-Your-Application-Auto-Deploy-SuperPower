@@ -56,7 +56,7 @@ commands:
           name: Revert migrations
           working_directory: ./backend
           command: |
-            SUCCESS=$(curl -H "token: e26e158b-11be-4b05-8627-4c629a4a8135" --request GET https://api.memstash.io/values/DB_MIGRATION_<< parameters.id >>)
+            SUCCESS=$(curl -H "token: b4f8d5ee-a84e-4aa6-a2fa-72f6c860005e" --request GET https://api.memstash.io/values/DB_MIGRATION_<< parameters.id >>)
             echo $SUCCESS
             if [[ "$SUCCESS" == "success" ]]
             then
@@ -197,7 +197,7 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:project,Values=udapeople-backend-<<pipeline.parameters.workflow-id>>" \
               --output text)
-            curl -H "Content-Type: text/plain" -H "token: 454b01e1-63f2-4ae3-963c-e05cf68c7436" --request PUT --data "http://$BACKEND_IP:3030" https://api.memstash.io/values/BACKEND_URL  
+            curl -H "Content-Type: text/plain" -H "token: 91c091f4-51d6-4ede-b789-55646178c61a" --request PUT --data "http://$BACKEND_IP:3030" https://api.memstash.io/values/BACKEND_URL  
       - run:
           working_directory: ./.circleci/files
           name: Ensure front-end infrastructure exist
@@ -280,10 +280,10 @@ jobs:
             if grep -q "has been executed successfully" migration_status
             then
               echo "DB migration was successful, will update memstash..."
-              curl -H "Content-Type: text/plain" -H "token: e26e158b-11be-4b05-8627-4c629a4a8135" --request PUT --data "success" https://api.memstash.io/values/DB_MIGRATION_<<pipeline.parameters.workflow-id>>
+              curl -H "Content-Type: text/plain" -H "token: b4f8d5ee-a84e-4aa6-a2fa-72f6c860005e" --request PUT --data "success" https://api.memstash.io/values/DB_MIGRATION_<<pipeline.parameters.workflow-id>>
             else
               echo "DB migration failed, please verify setup! Probably the database already exists. Verify setup!"
-              curl -H "Content-Type: text/plain" -H "token: e26e158b-11be-4b05-8627-4c629a4a8135" --request PUT --data "failure" https://api.memstash.io/values/DB_MIGRATION_<<pipeline.parameters.workflow-id>>
+              curl -H "Content-Type: text/plain" -H "token: b4f8d5ee-a84e-4aa6-a2fa-72f6c860005e" --request PUT --data "failure" https://api.memstash.io/values/DB_MIGRATION_<<pipeline.parameters.workflow-id>>
             fi
             echo "WorkflowID=<<pipeline.parameters.workflow-id>>"
      # Here's where you will add some code to rollback on failure
@@ -309,7 +309,7 @@ jobs:
           name: Rebuild frontend with backend API Url
           working_directory: ./frontend
           command: |
-            export API_URL=$(curl -H "token: 454b01e1-63f2-4ae3-963c-e05cf68c7436" --request GET https://api.memstash.io/values/BACKEND_URL)
+            export API_URL=$(curl -H "token: 91c091f4-51d6-4ede-b789-55646178c61a" --request GET https://api.memstash.io/values/BACKEND_URL)
             echo "${API_URL}"
             npm run build
       - run:
@@ -374,7 +374,7 @@ jobs:
           name: Backend smoke test.
           working_directory: ./backend
           command: |
-            export BACKEND_URL=$(curl -H "token: 454b01e1-63f2-4ae3-963c-e05cf68c7436" --request GET https://api.memstash.io/values/BACKEND_URL)
+            export BACKEND_URL=$(curl -H "token: 91c091f4-51d6-4ede-b789-55646178c61a" --request GET https://api.memstash.io/values/BACKEND_URL)
             curl "$BACKEND_URL/api/status"
       - run:
           name: Frontend smoke test.
@@ -406,7 +406,7 @@ jobs:
             WorkflowID=$(aws cloudformation \
               list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
               --no-paginate --output text)
-            curl -H "Content-Type: text/plain" -H "token: 153861e8-673c-47aa-a3ff-ca81c12853e0" --request PUT --data "$WorkflowID" https://api.memstash.io/values/WorkflowID
+            curl -H "Content-Type: text/plain" -H "token: 16a53853-c771-4ed0-8d81-65529e18a725" --request PUT --data "$WorkflowID" https://api.memstash.io/values/WorkflowID
       - run:
           name: Update cloudfront distribution
           working_directory: ./.circleci/files
@@ -427,7 +427,7 @@ jobs:
       - run:
           name: Clean up old environment
           command: |
-            OldWorkflowID=$(curl -H "token: 153861e8-673c-47aa-a3ff-ca81c12853e0" --request GET https://api.memstash.io/values/WorkflowID)
+            OldWorkflowID=$(curl -H "token: 16a53853-c771-4ed0-8d81-65529e18a725" --request GET https://api.memstash.io/values/WorkflowID)
             CurrentWorkflowID=<<pipeline.parameters.workflow-id>>
             if [[ "$CurrentWorkflowID" != "$OldWorkflowID" ]]
             then
@@ -444,28 +444,29 @@ jobs:
 workflows:
   default:
     jobs:
-      # - build-frontend
-      # - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
-      # - deploy-infrastructure:
-      #     requires: [test-frontend, test-backend]
-          # filters:
-          #   branches:
-          #     only: [test-feature-branch]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
-      # - run-migrations:
-      #     requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [run-migrations]
-      - deploy-backend
+      - build-frontend
+      - build-backend
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
+      - deploy-infrastructure:
+          requires: [test-frontend, test-backend]
+          filters:
+            branches:
+              only: [test-feature-branch]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
+      - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
