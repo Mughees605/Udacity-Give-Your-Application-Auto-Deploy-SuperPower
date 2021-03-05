@@ -1,0 +1,15 @@
+
+1. [URL01]:
+https://github.com/Mughees605/Give-Your-Application-Auto-Deploy-SuperPower
+
+2. [URL02]:
+https://udapeople-kk1j287dhjppmz408.s3.amazonaws.com/index.html
+
+3. [URL03]:
+d37acu424flyl2.cloudfront.net
+
+4. [URL04]:
+https://ec2-18-212-50-130.compute-1.amazonaws.com/:3030
+
+5. [URL05]:
+https://ec2-18-212-50-130.compute-1.amazonaws.com:9090/targets
