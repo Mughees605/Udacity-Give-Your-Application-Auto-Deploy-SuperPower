@@ -86,6 +86,12 @@ jobs:
       - save_cache:
           paths: [frontend/dist]
           key: frontend-dist
+      - destroy_environment:
+          id: <<pipeline.parameters.workflow-id>>
+          when: on_fail
+      - revert_migrations:
+          id: <<pipeline.parameters.workflow-id>>
+          when: on_fail  
 
   build-backend:
     docker:
@@ -382,12 +388,12 @@ jobs:
             URL="http://udapeople-<<pipeline.parameters.workflow-id>>.s3-website.us-east-1.amazonaws.com/index.html"
             curl -s ${URL} | grep -q "Welcome"
       # Here's where you will add some code to rollback on failure
-      # - destroy_environment:
-      #     id: <<pipeline.parameters.workflow-id>>
-      #     when: on_fail
-      # - revert_migrations:
-      #     id: <<pipeline.parameters.workflow-id>>
-      #     when: on_fail  
+      - destroy_environment:
+          id: <<pipeline.parameters.workflow-id>>
+          when: on_fail
+      - revert_migrations:
+          id: <<pipeline.parameters.workflow-id>>
+          when: on_fail  
 
   cloudfront-update:
     executor: aws
