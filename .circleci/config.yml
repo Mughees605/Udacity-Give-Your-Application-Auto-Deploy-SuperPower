@@ -382,12 +382,12 @@ jobs:
             URL="http://udapeople-<<pipeline.parameters.workflow-id>>.s3-website.us-east-1.amazonaws.com/index.html"
             curl -s ${URL} | grep -q "Welcome"
       # Here's where you will add some code to rollback on failure
-      - destroy_environment:
-          id: <<pipeline.parameters.workflow-id>>
-          when: on_fail
-      - revert_migrations:
-          id: <<pipeline.parameters.workflow-id>>
-          when: on_fail  
+      # - destroy_environment:
+      #     id: <<pipeline.parameters.workflow-id>>
+      #     when: on_fail
+      # - revert_migrations:
+      #     id: <<pipeline.parameters.workflow-id>>
+      #     when: on_fail  
 
   cloudfront-update:
     executor: aws
@@ -456,9 +456,9 @@ workflows:
           requires: [build-frontend]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend]
-          # filters:
-          #   branches:
-          #     only: [test-feature-branch]
+          filters:
+            branches:
+              only: [test-feature-branch]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
@@ -467,8 +467,8 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
-      # - smoke-test:
-      #     requires: [deploy-backend, deploy-frontend]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
       #     requires: [smoke-test]
       # - cleanup:
