@@ -14,7 +14,7 @@ executors:
 parameters:
   workflow-id:
     type: string
-    default: "kk1j287dhjppmz408"
+    default: "123"
   memstash-token:
     type: string
     default: "b9461c43-6888-4d04-8e76-7beeddbb863c"
@@ -416,9 +416,9 @@ jobs:
               --stack-name udapeople-cloudfront-production \
               --parameter-overrides WorkflowID="<<pipeline.parameters.workflow-id>>" \
               --tags project=udapeople
-      - revert_migrations:
-          id: <<pipeline.parameters.workflow-id>>
-          when: on_fail
+      # - revert_migrations:
+      #     id: <<pipeline.parameters.workflow-id>>
+      #     when: on_fail
 
   cleanup:
     executor: aws
@@ -467,9 +467,9 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
-      - smoke-test
-          # requires: [deploy-backend, deploy-frontend]
-      # - cloudfront-update:
-      #     requires: [smoke-test]
-      # - cleanup:
-      #     requires: [cloudfront-update]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
+      - cloudfront-update:
+          requires: [smoke-test]
+      - cleanup:
+          requires: [cloudfront-update]
